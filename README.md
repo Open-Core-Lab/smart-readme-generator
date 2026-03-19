@@ -160,4 +160,4 @@ npm run dev
 
 ## 📄 License
 
-MIT © [Madhusha Prasad](https://github.com/MadhushaPrasad)
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details. © [Madhusha Prasad](https://github.com/MadhushaPrasad)
