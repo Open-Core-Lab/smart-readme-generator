@@ -16,6 +16,11 @@ import GitHubInput from '../../components/GitHubInput';
 import TemplateCard from '../../components/TemplateCard';
 import Button from '../../components/Button';
 import type { Template } from '../../types';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { AlertCircle, Sparkles, Copy, Download, Check } from 'lucide-react';
 
 const TEMPLATES: Template[] = [
   {
@@ -88,115 +93,146 @@ export default function GeneratePage() {
   return (
     <div className="flex flex-col flex-1 gap-5 mx-auto px-4 sm:px-6 py-8 w-full max-w-7xl">
       {/* Step 1: GitHub Username */}
-      <section className="bg-white/[0.04] backdrop-blur-md p-6 border border-white/[0.08] rounded-2xl">
-        <div className="flex items-center gap-3 mb-5">
-          <span className="flex flex-shrink-0 justify-center items-center bg-cyan-500/15 border border-cyan-500/30 rounded-full w-7 h-7 font-bold text-cyan-400 text-xs">
-            1
-          </span>
-          <h2 className="font-semibold text-white">
-            Enter your GitHub username
-          </h2>
-        </div>
-        <GitHubInput onSubmit={handleFetchUser} loading={githubLoading} />
-        {githubError && (
-          <p
-            role="alert"
-            className="bg-red-500/10 mt-3 px-3 py-2 border border-red-500/20 rounded-lg text-red-400 text-sm"
-          >
-            {githubError}
-          </p>
-        )}
-        {user && (
-          <div className="flex items-center gap-3 bg-white/[0.04] mt-4 p-3 border border-white/[0.06] rounded-xl">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={user.avatar_url}
-              alt={`${user.login} avatar`}
-              className="rounded-full ring-2 ring-cyan-500/30 w-10 h-10"
-            />
-            <div>
-              <p className="font-medium text-white">
-                {user.name ?? user.login}
-              </p>
-              <p className="text-white/45 text-sm">
-                {user.public_repos} repos · {user.followers} followers
-              </p>
-            </div>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="secondary"
+              className="justify-center p-0 rounded-full min-w-7 size-7 font-bold text-xs"
+            >
+              1
+            </Badge>
+            <CardTitle>Enter your GitHub username</CardTitle>
           </div>
-        )}
-      </section>
+        </CardHeader>
+        <CardContent>
+          <GitHubInput onSubmit={handleFetchUser} loading={githubLoading} />
+          {githubError && (
+            <Alert variant="destructive" className="mt-3">
+              <AlertCircle className="size-4" />
+              <AlertDescription>{githubError}</AlertDescription>
+            </Alert>
+          )}
+          {user && (
+            <div className="flex items-center gap-3 bg-muted/40 mt-4 p-3 border border-border rounded-xl">
+              <Avatar size="lg">
+                <AvatarImage
+                  src={user.avatar_url}
+                  alt={`${user.login} avatar`}
+                />
+                <AvatarFallback>{user.login[0].toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-medium text-foreground">
+                  {user.name ?? user.login}
+                </p>
+                <p className="text-muted-foreground text-sm">
+                  {user.public_repos} repos · {user.followers} followers
+                </p>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Step 2: Choose Template */}
       {user && (
-        <section className="bg-white/[0.04] backdrop-blur-md p-6 border border-white/[0.08] rounded-2xl">
-          <div className="flex items-center gap-3 mb-5">
-            <span className="flex flex-shrink-0 justify-center items-center bg-cyan-500/15 border border-cyan-500/30 rounded-full w-7 h-7 font-bold text-cyan-400 text-xs">
-              2
-            </span>
-            <h2 className="font-semibold text-white">Choose a template</h2>
-          </div>
-          <div className="gap-3 grid grid-cols-1 sm:grid-cols-3">
-            {TEMPLATES.map((t) => (
-              <TemplateCard
-                key={t.id}
-                template={t}
-                selected={selectedTemplateId === t.id}
-                onSelect={handleSelectTemplate}
-              />
-            ))}
-          </div>
-        </section>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <Badge
+                variant="secondary"
+                className="justify-center p-0 rounded-full min-w-7 size-7 font-bold text-xs"
+              >
+                2
+              </Badge>
+              <CardTitle>Choose a template</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="gap-3 grid grid-cols-1 sm:grid-cols-3">
+              {TEMPLATES.map((t) => (
+                <TemplateCard
+                  key={t.id}
+                  template={t}
+                  selected={selectedTemplateId === t.id}
+                  onSelect={handleSelectTemplate}
+                />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Step 3: Generate */}
       {user && (
-        <section className="bg-white/[0.04] backdrop-blur-md p-6 border border-white/[0.08] rounded-2xl">
-          <div className="flex items-center gap-3 mb-5">
-            <span className="flex flex-shrink-0 justify-center items-center bg-cyan-500/15 border border-cyan-500/30 rounded-full w-7 h-7 font-bold text-cyan-400 text-xs">
-              3
-            </span>
-            <h2 className="font-semibold text-white">Generate README</h2>
-          </div>
-          <Button
-            onClick={handleGenerate}
-            loading={aiLoading}
-            disabled={!user || aiLoading}
-          >
-            ✨ Generate with AI
-          </Button>
-          {aiError && (
-            <p
-              role="alert"
-              className="bg-red-500/10 mt-3 px-3 py-2 border border-red-500/20 rounded-lg text-red-400 text-sm"
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <Badge
+                variant="secondary"
+                className="justify-center p-0 rounded-full min-w-7 size-7 font-bold text-xs"
+              >
+                3
+              </Badge>
+              <CardTitle>Generate README</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Button
+              onClick={handleGenerate}
+              loading={aiLoading}
+              disabled={!user || aiLoading}
             >
-              {aiError}
-            </p>
-          )}
-        </section>
+              <Sparkles className="size-4" />
+              Generate with AI
+            </Button>
+            {aiError && (
+              <Alert variant="destructive" className="mt-3">
+                <AlertCircle className="size-4" />
+                <AlertDescription>{aiError}</AlertDescription>
+              </Alert>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {/* Editor + Preview */}
       <section className="flex flex-col flex-1 min-h-[500px]">
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center gap-3">
-            <span className="flex flex-shrink-0 justify-center items-center bg-cyan-500/15 border border-cyan-500/30 rounded-full w-7 h-7 font-bold text-cyan-400 text-xs">
+            <Badge
+              variant="secondary"
+              className="justify-center p-0 rounded-full min-w-7 size-7 font-bold text-xs"
+            >
               4
-            </span>
-            <h2 className="font-semibold text-white">Edit &amp; Export</h2>
+            </Badge>
+            <h2 className="font-semibold text-foreground">Edit &amp; Export</h2>
           </div>
           {editorContent && (
             <div className="flex gap-2">
               <Button variant="secondary" size="sm" onClick={handleCopy}>
-                {copied ? '✓ Copied!' : 'Copy'}
+                {copied ? (
+                  <>
+                    <Check className="size-3.5" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="size-3.5" />
+                    Copy
+                  </>
+                )}
               </Button>
               <Button variant="secondary" size="sm" onClick={handleDownload}>
-                ⬇ Download .md
+                <Download className="size-3.5" />
+                Download .md
               </Button>
             </div>
           )}
         </div>
-        <div className="flex md:flex-row flex-col border border-white/[0.08] rounded-2xl h-[680px] overflow-hidden">
-          <div className="flex-1 border-white/[0.06] md:border-r min-w-0 overflow-hidden">
+        <div className="flex md:flex-row flex-col border border-border rounded-2xl h-[680px] overflow-hidden">
+          <div className="flex-1 border-border md:border-r min-w-0 overflow-hidden">
             <Editor />
           </div>
           <div className="flex-1 min-w-0 overflow-hidden">

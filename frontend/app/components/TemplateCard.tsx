@@ -1,6 +1,13 @@
 'use client';
 
 import type { Template } from '../types';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface TemplateCardProps {
   template: Template;
@@ -14,28 +21,32 @@ export default function TemplateCard({
   onSelect,
 }: TemplateCardProps) {
   return (
-    <button
-      onClick={() => onSelect(template.id)}
-      className={[
-        'w-full text-left rounded-xl border-2 p-4 transition-all duration-200',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50',
-        selected
-          ? 'border-cyan-500/60 bg-cyan-500/[0.08] shadow-[0_0_20px_rgba(6,182,212,0.15)]'
-          : 'border-white/[0.08] bg-white/[0.04] hover:bg-white/[0.08] hover:border-white/20',
-      ].join(' ')}
+    <Card
+      role="button"
+      tabIndex={0}
       aria-pressed={selected}
+      onClick={() => onSelect(template.id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect(template.id);
+        }
+      }}
+      className={cn(
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 transition-all duration-200 cursor-pointer',
+        selected
+          ? 'ring-2 ring-cyan-500/60 bg-cyan-500/[0.08] shadow-[0_0_20px_rgba(6,182,212,0.15)]'
+          : 'hover:bg-muted/50 hover:ring-white/20'
+      )}
     >
-      <p
-        className={[
-          'font-semibold text-sm',
-          selected ? 'text-cyan-300' : 'text-white/90',
-        ].join(' ')}
-      >
-        {template.name}
-      </p>
-      <p className="mt-1 text-white/40 text-xs leading-relaxed">
-        {template.description}
-      </p>
-    </button>
+      <CardHeader>
+        <CardTitle className={cn('text-sm', selected ? 'text-cyan-400' : '')}>
+          {template.name}
+        </CardTitle>
+        <CardDescription className="text-xs leading-relaxed">
+          {template.description}
+        </CardDescription>
+      </CardHeader>
+    </Card>
   );
 }

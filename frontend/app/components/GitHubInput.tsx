@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Button from './Button';
+import { Input } from '@/components/ui/input';
 
 interface GitHubInputProps {
   onSubmit: (username: string) => void;
@@ -28,14 +29,14 @@ export default function GitHubInput({
       <label htmlFor="github-username" className="sr-only">
         GitHub username
       </label>
-      <input
+      <Input
         id="github-username"
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Enter GitHub username…"
         autoComplete="off"
-        className="flex-1 bg-white/[0.05] backdrop-blur-sm px-4 py-2.5 border border-white/[0.1] focus:border-cyan-500/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 text-white text-sm transition-all placeholder-white/30"
+        className="flex-1 h-9"
         required
       />
       <Button type="submit" loading={loading} disabled={!value.trim()}>
