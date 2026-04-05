@@ -3,7 +3,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setContent, undo, redo } from '../store/editorSlice';
 import type { AppDispatch, RootState } from '../store';
-import Button from './Button';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Undo2, Redo2 } from 'lucide-react';
 
 export default function Editor() {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,8 +19,8 @@ export default function Editor() {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <div className="flex flex-shrink-0 items-center gap-2 bg-white/[0.03] px-3 py-2 border-white/[0.06] border-b">
-        <span className="font-semibold text-white/40 text-xs uppercase tracking-widest">
+      <div className="flex flex-shrink-0 items-center gap-2 px-3 py-2">
+        <span className="font-semibold text-muted-foreground text-xs uppercase tracking-widest">
           Editor
         </span>
         <div className="flex gap-1 ml-auto">
@@ -30,7 +32,8 @@ export default function Editor() {
             title="Undo (Ctrl+Z)"
             aria-label="Undo"
           >
-            ↩ Undo
+            <Undo2 className="size-3.5" />
+            Undo
           </Button>
           <Button
             variant="ghost"
@@ -40,12 +43,14 @@ export default function Editor() {
             title="Redo (Ctrl+Y)"
             aria-label="Redo"
           >
-            ↪ Redo
+            <Redo2 className="size-3.5" />
+            Redo
           </Button>
         </div>
       </div>
+      <Separator />
       <textarea
-        className="flex-1 bg-transparent p-4 focus:outline-none w-full font-mono text-white/85 text-sm resize-none placeholder-white/20"
+        className="flex-1 bg-transparent p-4 focus:outline-none w-full font-mono text-foreground/85 placeholder:text-muted-foreground/50 text-sm resize-none"
         value={content}
         onChange={(e) => dispatch(setContent(e.target.value))}
         placeholder="Your README markdown will appear here. You can also type directly..."

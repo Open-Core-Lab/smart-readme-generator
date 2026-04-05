@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export default function Navbar() {
   return (
@@ -34,7 +36,7 @@ export default function Navbar() {
         <nav className="flex items-center gap-1">
           <Link
             href="/generate"
-            className="hover:bg-white/[0.06] px-3 py-1.5 rounded-lg font-medium text-white/60 hover:text-white text-sm transition-all"
+            className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}
           >
             Generate
           </Link>
@@ -42,7 +44,7 @@ export default function Navbar() {
             href="https://github.com/Open-Core-Lab/smart-readme-generator"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:bg-white/[0.06] px-3 py-1.5 rounded-lg font-medium text-white/60 hover:text-white text-sm transition-all"
+            className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}
           >
             GitHub
           </a>

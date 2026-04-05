@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { store } from './store';
 import type { RootState } from './store';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 function ThemeApplier({ children }: { children: React.ReactNode }) {
   const mode = useSelector((state: RootState) => state.theme.mode);
@@ -30,7 +31,9 @@ function ThemeApplier({ children }: { children: React.ReactNode }) {
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
-      <ThemeApplier>{children}</ThemeApplier>
+      <ThemeApplier>
+        <TooltipProvider>{children}</TooltipProvider>
+      </ThemeApplier>
     </Provider>
   );
 }
